@@ -1,0 +1,62 @@
+
+CREATE TABLE AREA (
+    idArea NUMBER(19) PRIMARY KEY,       
+    nome VARCHAR2(100) NOT NULL,          
+    descricao VARCHAR2(255)              
+);
+
+
+CREATE SEQUENCE seq_area
+START WITH 1
+INCREMENT BY 1
+NOCACHE
+NOCYCLE;
+
+
+CREATE OR REPLACE TRIGGER trg_area_id
+BEFORE INSERT ON AREA
+FOR EACH ROW
+BEGIN
+    IF :NEW.idArea IS NULL THEN
+        SELECT seq_area.NEXTVAL
+        INTO :NEW.idArea
+        FROM dual;
+    END IF;
+END;
+/
+
+
+CREATE TABLE CANDIDATO (
+    idCandidato NUMBER(19) PRIMARY KEY,  
+    nome VARCHAR2(100) NOT NULL,          
+    telefone VARCHAR2(20),                
+    email VARCHAR2(100),                  
+    endereco VARCHAR2(255),               
+    formacao VARCHAR2(100),               
+    dataNasc DATE,                        
+    genero VARCHAR2(10),                  
+    tempoExperiencia NUMBER(3),           
+    idArea NUMBER(19),                    
+    CONSTRAINT fk_area FOREIGN KEY (idArea) REFERENCES AREA(idArea)  
+);
+
+
+CREATE SEQUENCE seq_candidato
+START WITH 1
+INCREMENT BY 1
+NOCACHE
+NOCYCLE;
+
+CREATE OR REPLACE TRIGGER trg_candidato_id
+BEFORE INSERT ON CANDIDATO
+FOR EACH ROW
+BEGIN
+    IF :NEW.idCandidato IS NULL THEN
+        SELECT seq_candidato.NEXTVAL
+        INTO :NEW.idCandidato
+        FROM dual;
+    END IF;
+END;
+/
+
+commit;
